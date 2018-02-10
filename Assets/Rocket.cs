@@ -29,13 +29,21 @@ public class Rocket : MonoBehaviour {
 
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-        Rotate();
-        Thrusting();
+    // Update is called once per frame
+    void Update()
+    {
+        if (state == State.Alive)
+        {
+            Rotate();
+            Thrusting();
+        }
 
+        if (state != State.Alive)
+        {
+
+            thruster.Stop();
+        }
 	}
 
     private void OnCollisionEnter(Collision collision)
@@ -43,6 +51,11 @@ public class Rocket : MonoBehaviour {
         foreach (ContactPoint contact in collision.contacts)
         {
             //print("Collision detected"); 
+
+            if (state != State.Alive){
+
+                return;
+            }
 
             switch (collision.gameObject.tag){
 
@@ -85,10 +98,7 @@ public class Rocket : MonoBehaviour {
 
     private void Rotate()
     {
-        switch (state)
-        {
-
-            case State.Alive:
+     
         rigidBody.freezeRotation = true; //Manually set rotation
         if (Input.GetKey(KeyCode.A))
         {
@@ -101,20 +111,13 @@ public class Rocket : MonoBehaviour {
             transform.Rotate(-Vector3.forward * rotationFrame);
         }
         rigidBody.freezeRotation = false; //reset natural rotation
-                break;
+            
 
-            default:
-
-                break;
-    
-        }
+      
     }
 
     private void Thrusting()
     {
-
-        switch (state)
-        {case State.Alive:
         if (Input.GetKey(KeyCode.Space))
         {
 
@@ -126,6 +129,8 @@ public class Rocket : MonoBehaviour {
             }
             else { thruster.Play(); }
 
+         
+
             rigidBody.AddRelativeForce(Vector3.up * thrustFrame);
 
             // print("Space Pressed");
@@ -136,7 +141,6 @@ public class Rocket : MonoBehaviour {
 
             thruster.Stop();
         }
-                break;
-    }
+                
     }
 }
