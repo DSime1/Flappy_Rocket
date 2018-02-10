@@ -10,14 +10,17 @@ public class Rocket : MonoBehaviour {
     Rigidbody rigidBody;
     AudioSource thruster;
     [SerializeField] float rcsThrust = 100f;
-    float rotationFrame; 
+    [SerializeField] float mainThruster = 1000f;
+    float rotationFrame;
+    float thrustFrame;
+
 
 	// Use this for initialization
 	void Start () {
         rigidBody = GetComponent<Rigidbody>();
         thruster = GetComponent<AudioSource>();
         rotationFrame = rcsThrust * Time.deltaTime;
-       
+        thrustFrame = mainThruster * Time.deltaTime;
 	}
 	
 	// Update is called once per frame
@@ -32,7 +35,20 @@ public class Rocket : MonoBehaviour {
     {
         foreach (ContactPoint contact in collision.contacts)
         {
-            print("Collision detected"); 
+            //print("Collision detected"); 
+
+            switch (collision.gameObject.tag){
+
+                case "Friendly":
+                    print("ok");
+                    break;
+
+                default:
+                    print("u dead");
+                    break;
+
+
+            }
         }
 
 
@@ -43,13 +59,13 @@ public class Rocket : MonoBehaviour {
         rigidBody.freezeRotation = true; //Manually set rotation
         if (Input.GetKey(KeyCode.A))
         {
-            print("rotate Left");
+            //print("rotate Left");
 
-            transform.Rotate(Vector3.forward*rotationFrame/10);
+            transform.Rotate(Vector3.forward*rotationFrame);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward*rotationFrame/10);
+            transform.Rotate(-Vector3.forward*rotationFrame);
         }
         rigidBody.freezeRotation = false; //reset natural rotation
     }
@@ -62,14 +78,14 @@ public class Rocket : MonoBehaviour {
             if (thruster.isPlaying)
             {
 
-                print("Playing Rocket");
+             //   print("Playing Rocket");
 
             }
             else { thruster.Play(); }
 
-            rigidBody.AddRelativeForce(Vector3.up * rotationFrame);
+            rigidBody.AddRelativeForce(Vector3.up * thrustFrame);
 
-            print("Space Pressed");
+           // print("Space Pressed");
 
         }
         else
