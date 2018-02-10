@@ -16,6 +16,12 @@ public class Rocket : MonoBehaviour {
     [SerializeField] AudioClip Explosion;
     [SerializeField] AudioClip Win;
 
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem ExplosionParticles;
+    [SerializeField] ParticleSystem WinParticles;
+
+
+
     float rotationFrame;
     float thrustFrame;
 
@@ -83,7 +89,9 @@ public class Rocket : MonoBehaviour {
     {
         state = State.Dying;
         thruster.Stop();
+        mainEngineParticles.Stop();
         thruster.PlayOneShot(Explosion);
+        ExplosionParticles.Play();
 
         Invoke("LoadFirstLevel", 2f);
     }
@@ -92,7 +100,9 @@ public class Rocket : MonoBehaviour {
     {
         print("hit Finish");
         thruster.Stop();
+        mainEngineParticles.Stop();
         thruster.PlayOneShot(Win);
+        WinParticles.Play();
 
         state = State.Transcending;
 
@@ -143,6 +153,7 @@ public class Rocket : MonoBehaviour {
         {
 
             thruster.Stop();
+            mainEngineParticles.Stop();
         }
 
 
@@ -154,6 +165,7 @@ public class Rocket : MonoBehaviour {
         if (!thruster.isPlaying)
         {
             thruster.PlayOneShot(mainEngine);
+            mainEngineParticles.Play();
 
         }
 
