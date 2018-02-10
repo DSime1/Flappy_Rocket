@@ -159,7 +159,7 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7958b4bc06d5042c0a2deac732d015b1, type: 2}
   m_IsPrefabParent: 0
---- !u!1001 &372582801
+--- !u!1001 &386391110
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -196,12 +196,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4121379305531890, guid: 5def07ce857e34b77934349efec884c8, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114744600281000240, guid: 5def07ce857e34b77934349efec884c8,
+    - target: {fileID: 82655639548351306, guid: 5def07ce857e34b77934349efec884c8,
         type: 2}
-      propertyPath: rcsThrust
-      value: 200
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5def07ce857e34b77934349efec884c8, type: 2}
@@ -293,7 +293,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4954147926208914, guid: 07e99eeece285441ca18538ba895ab54, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4954147926208914, guid: 07e99eeece285441ca18538ba895ab54, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x

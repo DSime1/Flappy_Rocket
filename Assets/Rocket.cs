@@ -12,6 +12,10 @@ public class Rocket : MonoBehaviour {
     AudioSource thruster;
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThruster = 1000f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip Explosion;
+    [SerializeField] AudioClip Win;
+
     float rotationFrame;
     float thrustFrame;
 
@@ -35,15 +39,11 @@ public class Rocket : MonoBehaviour {
     {
         if (state == State.Alive)
         {
-            Rotate();
-            Thrusting();
+            RespondToRotation();
+            RespondToThrustInput();
         }
 
-        if (state != State.Alive)
-        {
 
-            thruster.Stop();
-        }
 	}
 
     private void OnCollisionEnter(Collision collision)
@@ -60,43 +60,58 @@ public class Rocket : MonoBehaviour {
             switch (collision.gameObject.tag){
 
                 case "Friendly":
-                    print("ok");
                     break;
+
                 case "Finish":
-                    print("hit Finish");
-                    state = State.Transcending;
-                    Invoke("LoadNextLevel", 2f); //Invoke requires method name as a string, 1f means 1 second delay
+
+                    StartSuccessSequence();
 
                     break;
 
                 default:
-                    print("u dead");
 
-                    state = State.Dying;
-
-                    Invoke("LoadFirstLevel", 2f);
-
+                    StartDeathSequence();
 
                     break;
-
-
             }
         }
 
 
     }
 
+    private void StartDeathSequence()
+    {
+        state = State.Dying;
+        thruster.Stop();
+        thruster.PlayOneShot(Explosion);
+
+        Invoke("LoadFirstLevel", 2f);
+    }
+
+    private void StartSuccessSequence()
+    {
+        print("hit Finish");
+        thruster.Stop();
+        thruster.PlayOneShot(Win);
+
+        state = State.Transcending;
+
+        Invoke("LoadNextLevel", 2f); //Invoke requires method name as a string, 1f means 1 second delay
+    }
+
     private void LoadFirstLevel()
     {
+        
         SceneManager.LoadScene(0);
     }
 
     private void LoadNextLevel()
     {
+        
         SceneManager.LoadScene(1);
     }
 
-    private void Rotate()
+    private void RespondToRotation()
     {
      
         rigidBody.freezeRotation = true; //Manually set rotation
@@ -116,24 +131,12 @@ public class Rocket : MonoBehaviour {
       
     }
 
-    private void Thrusting()
+    private void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-
-            if (thruster.isPlaying)
-            {
-
-                //   print("Playing Rocket");
-
-            }
-            else { thruster.Play(); }
-
-         
-
-            rigidBody.AddRelativeForce(Vector3.up * thrustFrame);
-
-            // print("Space Pressed");
+            
+            ApplyThrust();
 
         }
         else
@@ -141,6 +144,18 @@ public class Rocket : MonoBehaviour {
 
             thruster.Stop();
         }
-                
+
+
+    }
+
+    private void ApplyThrust()
+    {
+        rigidBody.AddRelativeForce(Vector3.up * thrustFrame);
+        if (!thruster.isPlaying)
+        {
+            thruster.PlayOneShot(mainEngine);
+
+        }
+
     }
 }
