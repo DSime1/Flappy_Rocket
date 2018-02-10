@@ -15,6 +15,8 @@ public class Rocket : MonoBehaviour {
     float rotationFrame;
     float thrustFrame;
 
+    enum State { Alive, Dying, Transcending };
+    State state;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +24,10 @@ public class Rocket : MonoBehaviour {
         thruster = GetComponent<AudioSource>();
         rotationFrame = rcsThrust * Time.deltaTime;
         thrustFrame = mainThruster * Time.deltaTime;
+
+         state = State.Alive;
+
+
 	}
 	
 	// Update is called once per frame
@@ -45,15 +51,18 @@ public class Rocket : MonoBehaviour {
                     break;
                 case "Finish":
                     print("hit Finish");
-
-                    SceneManager.LoadScene(1);
+                    state = State.Transcending;
+                    Invoke("LoadNextLevel", 2f); //Invoke requires method name as a string, 1f means 1 second delay
 
                     break;
 
                 default:
                     print("u dead");
 
-                    SceneManager.LoadScene(0);
+                    state = State.Dying;
+
+                    Invoke("LoadFirstLevel", 2f);
+
 
                     break;
 
@@ -64,38 +73,62 @@ public class Rocket : MonoBehaviour {
 
     }
 
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextLevel()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     private void Rotate()
     {
+        switch (state)
+        {
+
+            case State.Alive:
         rigidBody.freezeRotation = true; //Manually set rotation
         if (Input.GetKey(KeyCode.A))
         {
             //print("rotate Left");
 
-            transform.Rotate(Vector3.forward*rotationFrame);
+            transform.Rotate(Vector3.forward * rotationFrame);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward*rotationFrame);
+            transform.Rotate(-Vector3.forward * rotationFrame);
         }
         rigidBody.freezeRotation = false; //reset natural rotation
+                break;
+
+            default:
+
+                break;
+    
+        }
     }
 
     private void Thrusting()
     {
+
+        switch (state)
+        {case State.Alive:
         if (Input.GetKey(KeyCode.Space))
         {
 
             if (thruster.isPlaying)
             {
 
-             //   print("Playing Rocket");
+                //   print("Playing Rocket");
 
             }
             else { thruster.Play(); }
 
             rigidBody.AddRelativeForce(Vector3.up * thrustFrame);
 
-           // print("Space Pressed");
+            // print("Space Pressed");
 
         }
         else
@@ -103,6 +136,7 @@ public class Rocket : MonoBehaviour {
 
             thruster.Stop();
         }
-
+                break;
+    }
     }
 }
