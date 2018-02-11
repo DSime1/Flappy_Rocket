@@ -52,7 +52,7 @@ public class Rocket : MonoBehaviour {
             RespondToThrustInput();
         }
 
-        //works only when is not develop build (when I am coding)
+        //works only when is not development build (when I am coding)
         if (Debug.isDebugBuild)
         {
             RespondToDebugMode();
@@ -147,8 +147,22 @@ public class Rocket : MonoBehaviour {
 
     private void LoadNextLevel()
     {
-        
-        SceneManager.LoadScene(1);
+        int currentScene;
+        int nextScene;
+
+        currentScene = SceneManager.GetActiveScene().buildIndex;
+        nextScene = ++currentScene;
+
+        if (nextScene == SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(0);
+
+        }
+        else
+        {
+            SceneManager.LoadScene(nextScene);
+
+        }
     }
 
     private void RespondToRotation()

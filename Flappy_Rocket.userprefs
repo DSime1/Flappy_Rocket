@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.ItemProperties.Flappy__Rocket PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Rocket.cs">
     <Files>
-      <File FileName="Assets/Scripts/Rocket.cs" Line="110" Column="47" />
+      <File FileName="Assets/Scripts/Rocket.cs" Line="55" Column="33" />
+      <File FileName="Assets/Scripts/Oscillator.cs" Line="40" Column="52" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
