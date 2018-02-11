@@ -22,7 +22,7 @@ public class Rocket : MonoBehaviour {
     [SerializeField] ParticleSystem WinParticles;
 
 
-
+    bool CollisionDisable;
     float rotationFrame;
     float thrustFrame;
 
@@ -36,7 +36,9 @@ public class Rocket : MonoBehaviour {
         rotationFrame = rcsThrust * Time.deltaTime;
         thrustFrame = mainThruster * Time.deltaTime;
 
-         state = State.Alive;
+        state = State.Alive;
+
+        CollisionDisable = false;
 
 
 	}
@@ -50,17 +52,39 @@ public class Rocket : MonoBehaviour {
             RespondToThrustInput();
         }
 
+        //works only when is not develop build (when I am coding)
+        if (Debug.isDebugBuild)
+        {
+            RespondToDebugMode();
+        }
+    }
 
-	}
+    private void RespondToDebugMode()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+
+        if (Input.GetKey(KeyCode.C))
+        {
+            if (CollisionDisable)
+            {
+                CollisionDisable = false;
+            }
+                else 
+            {
+                CollisionDisable = true;
+            }
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         foreach (ContactPoint contact in collision.contacts)
         {
-            //print("Collision detected"); 
-
-            if (state != State.Alive){
-
+            if (state != State.Alive)
+            {
                 return;
             }
 
@@ -76,9 +100,14 @@ public class Rocket : MonoBehaviour {
                     break;
 
                 default:
-
-                    StartDeathSequence();
-
+                    if (CollisionDisable)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        StartDeathSequence();
+                    }
                     break;
             }
         }
@@ -144,6 +173,8 @@ public class Rocket : MonoBehaviour {
 
     private void RespondToThrustInput()
     {
+        
+
         if (Input.GetKey(KeyCode.Space))
         {
             
