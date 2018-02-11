@@ -26,8 +26,7 @@ public class Rocket : MonoBehaviour {
     float rotationFrame;
     float thrustFrame;
 
-    enum State { Alive, Dying, Transcending };
-    State state;
+    bool isTransitioning = false;
 
 	// Use this for initialization
 	void Start () {
@@ -36,7 +35,7 @@ public class Rocket : MonoBehaviour {
         rotationFrame = rcsThrust * Time.deltaTime;
         thrustFrame = mainThruster * Time.deltaTime;
 
-        state = State.Alive;
+        isTransitioning = false;
 
         CollisionDisable = false;
 
@@ -46,7 +45,7 @@ public class Rocket : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (state == State.Alive)
+        if (!isTransitioning)
         {
             RespondToRotation();
             RespondToThrustInput();
@@ -83,7 +82,7 @@ public class Rocket : MonoBehaviour {
     {
         foreach (ContactPoint contact in collision.contacts)
         {
-            if (state != State.Alive)
+            if (isTransitioning)
             {
                 return;
             }
@@ -117,7 +116,7 @@ public class Rocket : MonoBehaviour {
 
     private void StartDeathSequence()
     {
-        state = State.Dying;
+        isTransitioning = true;
         thruster.Stop();
         mainEngineParticles.Stop();
         thruster.PlayOneShot(Explosion);
@@ -134,7 +133,7 @@ public class Rocket : MonoBehaviour {
         thruster.PlayOneShot(Win);
         WinParticles.Play();
 
-        state = State.Transcending;
+        isTransitioning =true;
 
         Invoke("LoadNextLevel", loadLevelDelay); //Invoke requires method name as a string, 1f means 1 second delay
     }
@@ -197,12 +196,16 @@ public class Rocket : MonoBehaviour {
         }
         else
         {
-
-            thruster.Stop();
-            mainEngineParticles.Stop();
+            StopApplyThrust();
         }
 
 
+    }
+
+    private void StopApplyThrust()
+    {
+        thruster.Stop();
+        mainEngineParticles.Stop();
     }
 
     private void ApplyThrust()

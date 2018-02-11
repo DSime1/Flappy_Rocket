@@ -25,11 +25,7 @@ public class Oscillator : MonoBehaviour {
 
         redObstacles = GameObject.Find("MovingObstacles");
 
-        startingPos = redObstacles.transform.position ;
-
-       // print(redObstacles.transform.position);
-
-		
+        startingPos = redObstacles.transform.position ;		
 	}
 	
 	// Update is called once per frame
@@ -58,8 +54,5 @@ public class Oscillator : MonoBehaviour {
         //movementVector = startingPos;
         redObstacles.transform.position = startingPos + offset;
 
-        //redObstacles.transform.position = movementVector * movementFactor;
-        print(movementVector);
-        print(redObstacles.transform.position);
 	}
 }
